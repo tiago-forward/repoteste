@@ -1,4 +1,4 @@
-export type DayType = "default" | "folga" | "trocado" | "observação";
+import { DayType } from "../types/dayType";
 
 interface CalendarDayInfo {
   types: { type: DayType; description?: string }[];
