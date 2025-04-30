@@ -9,7 +9,6 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "../ui/hover-card";
-import { CalendarSync } from "lucide-react";
 
 export function CalendarBox() {
   const shortWeekDays = getWeekDays({ short: true });
@@ -62,7 +61,7 @@ export function CalendarBox() {
                             {" "}
                             <Calendar.Button
                               disabled={disabled}
-                              dayType={types}
+                              dayType={types[0]?.type}
                             >
                               {date.getDate()}
                             </Calendar.Button>

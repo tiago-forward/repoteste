@@ -29,7 +29,7 @@ export function CalendarList() {
                         <span
                           className={`
                       rounded-full w-6 h-6 flex items-center justify-center text-secondary font-medium
-                      ${typeInfo.type === "folga" ? "bg-obs-2" : ""}
+                      ${typeInfo.type === "default" ? "bg-obs-2" : ""}
                       ${typeInfo.type === "trocado" ? "bg-obs-1" : ""}
                       ${typeInfo.type === "observação" ? "bg-obs-3" : ""}
                     `}

@@ -9,7 +9,7 @@ export default function UserLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const isAdmin = true;
+  const isAdmin = false;
 
   return (
     <CalendarProvider>

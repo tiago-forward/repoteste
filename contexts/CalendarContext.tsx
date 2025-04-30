@@ -12,14 +12,13 @@ import {
   subMonths,
   format,
 } from "date-fns";
-import { calendarData } from "@/constants/calendar-data";
+import { calendarData, DayEntry } from "@/constants/calendar-data";
 import { ptBR } from "date-fns/locale";
 
 interface DayInfo {
   date: Date;
   disabled: boolean;
-  type: "default" | "folga" | "trocado" | "observação";
-  description?: string;
+  types: DayEntry[];
 }
 
 interface CalendarWeek {
@@ -75,7 +74,7 @@ export function CalendarProvider({ children }: { children: ReactNode }) {
       ...nextMonthFillArray,
     ];
 
-    const calendarDays: DayInfo[] = allDays.map((date) => {
+    const calendarDays = allDays.map((date) => {
       const monthKey = format(currentDate, "yyyy-MM");
       const dayKey = format(date, "yyyy-MM-dd");
       const dayInfo = calendarData[monthKey]?.[dayKey];

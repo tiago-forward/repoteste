@@ -1,14 +1,23 @@
-import { DayType } from "../types/dayType";
+export type DayType = "default" | "folga" | "trocado" | "observação";
 
-interface CalendarDayInfo {
-  types: { type: DayType; description?: string }[];
+export interface DayEntry {
+  type: DayType;
+  description?: string;
 }
 
-type CalendarData = {
-  [date: string]: CalendarDayInfo;
+export type CalendarDayData = {
+  types: DayEntry[];
 };
 
-export const calendarData: { [month: string]: CalendarData } = {
+export type CalendarMonthData = {
+  [day: string]: CalendarDayData;
+};
+
+export type CalendarData = {
+  [month: string]: CalendarMonthData;
+};
+
+export const calendarData: CalendarData = {
   "2025-03": {
     "2025-03-05": { types: [{ type: "folga" }] },
     "2025-03-10": { types: [{ type: "trocado", description: "Tiago - Luiz" }] },
