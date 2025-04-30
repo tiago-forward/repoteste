@@ -1,0 +1,1 @@
+// Lógica para gerar escalas automáticas
