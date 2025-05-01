@@ -1,0 +1,58 @@
+export const collaborators = [
+  {
+    name: "Tiago Lacerda Ferreira",
+    position: "Front",
+    team: "Suporte",
+    shift: "14:00 - 22:00",
+    dayOff: "Terça",
+  },
+  {
+    name: "Luiz Felipe Azevedo de Brito",
+    position: "Back",
+    team: "Suporte",
+    shift: "14:00 - 22:00",
+    dayOff: "Quinta",
+  },
+  {
+    name: "Heitor",
+    position: "Jogos",
+    team: "Suporte",
+    shift: "22:00 - 06:00",
+    dayOff: "Quarta",
+  },
+  {
+    name: "Kevyn",
+    position: "Back",
+    team: "Suporte",
+    shift: "22:00 - 06:00",
+    dayOff: "Segunda",
+  },
+  {
+    name: "David",
+    position: "Front",
+    team: "Suporte",
+    shift: "06:00 - 14:00",
+    dayOff: "Segunda",
+  },
+  {
+    name: "Lavique",
+    position: "Back",
+    team: "Suporte",
+    shift: "06:00 - 14:00",
+    dayOff: "Sexta",
+  },
+  {
+    name: "Well",
+    position: "Supervisor I",
+    team: "Segurança",
+    shift: "14:00 - 22:00",
+    dayOff: "Sexta",
+  },
+  {
+    name: "Demi Lovato",
+    position: "Supervisor I",
+    team: "Atendimento",
+    shift: "14:00 - 22:00",
+    dayOff: "Sexta",
+  },
+];

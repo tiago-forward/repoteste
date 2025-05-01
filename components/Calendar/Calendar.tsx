@@ -107,13 +107,13 @@ export function CalendarBox() {
                           return (
                             <div key={index}>
                               {type === "observação" && (
-                                <div className="w-2.5 h-2.5 rounded-full absolute bg-obs-3 bottom-1 left-8 z-10"></div>
+                                <div className="w-1.5 h-1.5 md:w-2.5 md:h-2.5 rounded-full absolute bg-obs-3 bottom-0.5 left-7 md:bottom-1 md:left-8 z-10"></div>
                               )}
                               {type === "folga" && (
-                                <div className="w-2.5 h-2.5  rounded-full absolute bg-obs-2 bottom-1 left-1 z-10"></div>
+                                <div className="w-1.5 h-1.5 md:w-2.5 md:h-2.5 rounded-full absolute bg-obs-2 bottom-0.5 left-0.5 md:bottom-1 md:left-1 z-10"></div>
                               )}
                               {type === "trocado" && (
-                                <div className="w-2.5 h-2.5 rounded-full absolute bg-obs-1 bottom-1 left-4 z-10"></div>
+                                <div className="w-1.5 h-1.5 md:w-2.5 md:h-2.5 rounded-full absolute bg-obs-1 bottom-0.5 left-4 md:bottom-1 md:left-4 z-10"></div>
                               )}
                             </div>
                           );

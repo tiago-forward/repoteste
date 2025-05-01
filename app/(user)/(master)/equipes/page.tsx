@@ -2,8 +2,6 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem } from "@/components/ui/select";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Table,
@@ -13,65 +11,21 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
-const collaborators = [
-  {
-    name: "Tiago",
-    position: "Front",
-    team: "Suporte",
-    shift: "14:00 - 22:00",
-    dayOff: "Terça",
-  },
-  {
-    name: "Luiz",
-    position: "Back",
-    team: "Suporte",
-    shift: "14:00 - 22:00",
-    dayOff: "Quinta",
-  },
-  {
-    name: "Heitor",
-    position: "Jogos",
-    team: "Suporte",
-    shift: "22:00 - 06:00",
-    dayOff: "Quarta",
-  },
-  {
-    name: "Kevyn",
-    position: "Back",
-    team: "Suporte",
-    shift: "22:00 - 06:00",
-    dayOff: "Segunda",
-  },
-  {
-    name: "David",
-    position: "Front",
-    team: "Suporte",
-    shift: "06:00 - 14:00",
-    dayOff: "Segunda",
-  },
-  {
-    name: "Lavique",
-    position: "Back",
-    team: "Suporte",
-    shift: "06:00 - 14:00",
-    dayOff: "Sexta",
-  },
-  {
-    name: "Well",
-    position: "Supervisor I",
-    team: "Segurança",
-    shift: "14:00 - 22:00",
-    dayOff: "Sexta",
-  },
-  {
-    name: "Demi Lovato",
-    position: "Supervisor I",
-    team: "Atendimento",
-    shift: "14:00 - 22:00",
-    dayOff: "Sexta",
-  },
-];
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { collaborators } from "@/constants/collaborators";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { MoreHorizontal } from "lucide-react";
 
 export default function Equipes() {
   const [selectedTeam, setSelectedTeam] = useState("Todos");
@@ -87,59 +41,90 @@ export default function Equipes() {
 
       <div className="flex items-center gap-4">
         <span className="text-muted-foreground">Filtrar por equipe:</span>
-        <Select value={selectedTeam} onValueChange={setSelectedTeam}>
+        <Select onValueChange={setSelectedTeam}>
+          <SelectTrigger className="w-[180px] cursor-pointer">
+            <SelectValue placeholder="Selecionar equipe" />
+          </SelectTrigger>
           <SelectContent>
-            <SelectItem value="Todos">Todos</SelectItem>
-            <SelectItem value="Suporte">Suporte</SelectItem>
-            <SelectItem value="Segurança">Segurança</SelectItem>
-            <SelectItem value="Atendimento">Atendimento</SelectItem>
+            <SelectItem value="Todos" className="cursor-pointer">
+              Todos
+            </SelectItem>
+            <SelectItem value="Suporte" className="cursor-pointer">
+              Suporte
+            </SelectItem>
+            <SelectItem value="Segurança" className="cursor-pointer">
+              Segurança
+            </SelectItem>
+            <SelectItem value="Atendimento" className="cursor-pointer">
+              Atendimento
+            </SelectItem>
           </SelectContent>
         </Select>
       </div>
 
-      <Card>
-        <CardContent className="p-4">
-          <Table>
+      <Card className="py-4 md:py-6">
+        <CardContent className="px-4 md:px-6 w-full overflow-x-auto">
+          <Table className="min-w-full">
             <TableHeader>
               <TableRow>
                 <TableHead>Nome</TableHead>
-                <TableHead>Cargo</TableHead>
-                <TableHead>Equipe</TableHead>
+                <TableHead className="hidden md:table-cell">Cargo</TableHead>
+                <TableHead className="hidden md:table-cell">Equipe</TableHead>
                 <TableHead>Turno padrão</TableHead>
-                <TableHead>Folga fixa</TableHead>
+                <TableHead className="truncate max-w-[54px] sm:max-w-28 md:max-w-none">
+                  Folga fixa
+                </TableHead>
                 <TableHead>Ações</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filtered.map((col, i) => (
                 <TableRow key={i}>
-                  <TableCell>{col.name}</TableCell>
-                  <TableCell>{col.position}</TableCell>
-                  <TableCell>{col.team}</TableCell>
+                  <TableCell className="truncate max-w-[85px] sm:max-w-28 md:max-w-none">
+                    {col.name}
+                  </TableCell>
+                  <TableCell className="hidden md:table-cell">
+                    {col.position}
+                  </TableCell>
+                  <TableCell className="hidden md:table-cell">
+                    {col.team}
+                  </TableCell>
                   <TableCell>{col.shift}</TableCell>
-                  <TableCell>{col.dayOff}</TableCell>
+                  <TableCell className="truncate max-w-[54px] sm:max-w-28 md:max-w-none">
+                    {col.dayOff}
+                  </TableCell>
                   <TableCell className="space-x-2">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="cursor-pointer"
-                    >
-                      Editar
-                    </Button>
-                    {/* <Button
-                      size="sm"
-                      variant="secondary"
-                      className="cursor-pointer"
-                    >
-                      Alterar Turno
-                    </Button> */}
-                    <Button
-                      size="sm"
-                      variant="destructive"
-                      className="cursor-pointer"
-                    >
-                      Desativar
-                    </Button>
+                    <div className="hidden lg:flex space-x-2">
+                      <Button size="sm" variant="outline">
+                        Editar
+                      </Button>
+                      <Button size="sm" variant="destructive">
+                        Desativar
+                      </Button>
+                    </div>
+
+                    <div className="lg:hidden">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon">
+                            <MoreHorizontal className="h-5 w-5" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem
+                            onClick={() => console.log("Editar", col.name)}
+                          >
+                            Editar
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => console.log("Desativar", col.name)}
+                            className="text-red-600"
+                          >
+                            Desativar
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}

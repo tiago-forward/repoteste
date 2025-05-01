@@ -3,7 +3,7 @@ import { CalendarList } from "@/components/CalendarList";
 
 export default function MinhaEscala() {
   return (
-    <div className="flex flex-col gap-6 lg:flex-row">
+    <div className="flex flex-col gap-6 xl:flex-row">
       <CalendarBox />
       <CalendarList />
     </div>
