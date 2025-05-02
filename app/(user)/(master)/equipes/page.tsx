@@ -39,8 +39,8 @@ export default function Equipes() {
     <div className="space-y-4">
       <h2 className="text-2xl font-bold">Equipes</h2>
 
-      <div className="flex items-center gap-4">
-        <span className="text-muted-foreground">Filtrar por equipe:</span>
+      <div className="flex items-center gap-3">
+        <span className="text-muted-foreground">Equipe:</span>
         <Select onValueChange={setSelectedTeam}>
           <SelectTrigger className="w-[180px] cursor-pointer">
             <SelectValue placeholder="Selecionar equipe" />
@@ -67,11 +67,15 @@ export default function Equipes() {
           <Table className="min-w-full">
             <TableHeader>
               <TableRow>
-                <TableHead>Nome</TableHead>
-                <TableHead className="hidden md:table-cell">Cargo</TableHead>
-                <TableHead className="hidden md:table-cell">Equipe</TableHead>
-                <TableHead>Turno padrão</TableHead>
-                <TableHead className="truncate max-w-[54px] sm:max-w-28 md:max-w-none">
+                <TableHead className="font-bold">Nome</TableHead>
+                <TableHead className="font-bold hidden md:table-cell">
+                  Cargo
+                </TableHead>
+                <TableHead className="font-bold hidden md:table-cell">
+                  Equipe
+                </TableHead>
+                <TableHead className="font-bold">Turno padrão</TableHead>
+                <TableHead className="font-bold truncate max-w-[54px] sm:max-w-28 md:max-w-none">
                   Folga fixa
                 </TableHead>
                 <TableHead>Ações</TableHead>
