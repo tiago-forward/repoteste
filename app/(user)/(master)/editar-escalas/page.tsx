@@ -9,10 +9,6 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
-import { Card, CardContent } from "@/components/ui/card";
-import { collaborators } from "@/constants/collaborators";
-import { shifts } from "@/constants/shifts";
-import { months } from "@/constants/months";
 import {
   Table,
   TableBody,
@@ -21,38 +17,89 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Card, CardContent } from "@/components/ui/card";
+import { collaborators } from "@/constants/collaborators";
+import { shifts } from "@/constants/shifts";
+import { months } from "@/constants/months";
 
-const daysOfMonth = Array.from({ length: 31 }, (_, i) => i + 1);
+// Função utilitária para dividir mês em semanas
+const getWeeks = (year: number, month: number): Date[][] => {
+  const date = new Date(year, month - 1, 1);
+  const weeks: Date[][] = [];
+  let week: Date[] = [];
+
+  while (date.getMonth() === month - 1) {
+    week.push(new Date(date));
+    if (
+      date.getDay() === 6 ||
+      date.getDate() ===
+        new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate()
+    ) {
+      weeks.push(week);
+      week = [];
+    }
+    date.setDate(date.getDate() + 1);
+  }
+
+  return weeks;
+};
 
 export default function EditarEscalas() {
-  const [selectedDay, setSelectedDay] = useState<number>(new Date().getDate());
-  const [selectedMonth, setSelectedMonth] = useState<number>(
-    new Date().getMonth() + 1
+  const today = new Date();
+  const [selectedMonth, setSelectedMonth] = useState(today.getMonth() + 1);
+  const [selectedYear] = useState(today.getFullYear());
+  const [selectedTeam, setSelectedTeam] = useState("Todos");
+
+  const [visibleByWeek, setVisibleByWeek] = useState<Record<number, number>>(
+    {}
   );
-  const [selectedTeam, setSelectedTeam] = useState<string>("Todos");
-  const [selectedCollaborator, setSelectedCollaborator] =
-    useState<string>("Todos");
+
+  const weeks = getWeeks(selectedYear, selectedMonth);
 
   const filtered = collaborators.filter((col) => {
     if (selectedTeam !== "Todos" && col.team !== selectedTeam) return false;
-    if (selectedCollaborator !== "Todos" && col.name !== selectedCollaborator)
-      return false;
     return true;
   });
 
+  const handleLoadMore = (weekIdx: number) => {
+    setVisibleByWeek((prev) => ({
+      ...prev,
+      [weekIdx]: (prev[weekIdx] || 6) + 6,
+    }));
+  };
+
+  const resetVisibleByWeek = () => {
+    const reset: Record<number, number> = {};
+    weeks.forEach((_, idx) => {
+      reset[idx] = 6;
+    });
+    setVisibleByWeek(reset);
+  };
+
+  // Resetar quando muda mês ou equipe
+  const handleChangeMonth = (val: string) => {
+    setSelectedMonth(Number(val));
+    resetVisibleByWeek();
+  };
+
+  const handleChangeTeam = (val: string) => {
+    setSelectedTeam(val);
+    resetVisibleByWeek();
+  };
+
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <h2 className="text-2xl font-bold">Editar Escalas</h2>
 
-      <div className="flex flex-wrap items-center gap-3">
-        <div className="flex items-center gap-3">
+      <div className="flex gap-4 flex-wrap">
+        <div className="flex items-center gap-2">
           <span className="text-muted-foreground">Mês:</span>
           <Select
-            onValueChange={(val) => setSelectedMonth(Number(val))}
+            onValueChange={handleChangeMonth}
             defaultValue={String(selectedMonth)}
           >
             <SelectTrigger className="w-[140px]">
-              <SelectValue placeholder="Mês" />
+              <SelectValue />
             </SelectTrigger>
             <SelectContent>
               {months.map((month, idx) => (
@@ -64,30 +111,11 @@ export default function EditarEscalas() {
           </Select>
         </div>
 
-        <div className="flex items-center gap-3">
-          <span className="text-muted-foreground">Dia:</span>
-          <Select
-            onValueChange={(val) => setSelectedDay(Number(val))}
-            defaultValue={String(selectedDay)}
-          >
-            <SelectTrigger className="w-[100px]">
-              <SelectValue placeholder="Dia" />
-            </SelectTrigger>
-            <SelectContent>
-              {daysOfMonth.map((day) => (
-                <SelectItem key={day} value={String(day)}>
-                  {day}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           <span className="text-muted-foreground">Equipe:</span>
-          <Select onValueChange={setSelectedTeam} defaultValue="Todos">
-            <SelectTrigger className="w-[140px]">
-              <SelectValue placeholder="Equipe" />
+          <Select onValueChange={handleChangeTeam} defaultValue="Todos">
+            <SelectTrigger className="w-[150px]">
+              <SelectValue />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="Todos">Todas</SelectItem>
@@ -97,64 +125,89 @@ export default function EditarEscalas() {
             </SelectContent>
           </Select>
         </div>
-
-        <div className="flex items-center gap-3">
-          <span className="text-muted-foreground">Colaborador:</span>
-          <Select onValueChange={setSelectedCollaborator} defaultValue="Todos">
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Colaborador" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="Todos">Todos</SelectItem>
-              {collaborators
-                .filter(
-                  (c) => selectedTeam === "Todos" || c.team === selectedTeam
-                )
-                .map((c) => (
-                  <SelectItem key={c.name} value={c.name}>
-                    {c.name}
-                  </SelectItem>
-                ))}
-            </SelectContent>
-          </Select>
-        </div>
       </div>
 
-      <Card className="py-4 md:py-6">
-        <CardContent className="px-4 md:px-6 w-full overflow-x-auto">
-          <Table className="min-w-full text-left rounded-md">
-            <TableHeader>
-              <TableRow>
-                <TableHead className="font-bold">Nome</TableHead>
-                <TableHead className="font-bold">Equipe</TableHead>
-                <TableHead className="text-center">Turno</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filtered.map((col) => (
-                <TableRow key={col.name}>
-                  <TableCell className="truncate max-w-[100px] sm:max-w-28 md:max-w-none">
-                    {col.name}
-                  </TableCell>
-                  <TableCell>{col.team}</TableCell>
-                  <TableCell>
-                    <Button variant="outline" className="cursor-pointer w-full">
-                      {shifts[Math.floor(Math.random() * shifts.length)]}
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
+      <div className="space-y-6">
+        {weeks.map((week, weekIdx) => {
+          const visibleCount = visibleByWeek[weekIdx] || 6;
+          const visibleCollaborators = filtered.slice(0, visibleCount);
+          const hasMore = visibleCollaborators.length < filtered.length;
 
-      {/* Botões extras adicionais */}
-      {/* <div className="flex gap-2 flex-wrap">
-        <Button>+ Adicionar turno</Button>
-        <Button variant="outline">Aplicar folga a todos</Button>
-        <Button variant="outline">Trocar colaboradores</Button>
-      </div> */}
+          return (
+            <Card key={weekIdx} className="py-4 md:py-6">
+              <CardContent className="px-4 md:px-6 w-full overflow-x-auto">
+                <Table className="min-w-[800px]">
+                  <TableHeader>
+                    {/* Linha com dia da semana */}
+                    <TableRow>
+                      <TableHead className="font-bold">Nome</TableHead>
+                      {week.map((day) => (
+                        <TableHead
+                          key={`dow-${day.toISOString()}`}
+                          className="text-center text-xs font-bold w-28"
+                        >
+                          {day
+                            .toLocaleDateString("pt-BR", { weekday: "short" })
+                            .toUpperCase()}
+                        </TableHead>
+                      ))}
+                    </TableRow>
+
+                    {/* Linha com dia do mês */}
+                    <TableRow>
+                      <TableHead />
+                      {week.map((day) => (
+                        <TableHead
+                          key={`day-${day.toISOString()}`}
+                          className="text-center text-muted-foreground"
+                        >
+                          {day.getDate().toString().padStart(2, "0")}/
+                          {String(selectedMonth).padStart(2, "0")}
+                        </TableHead>
+                      ))}
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {visibleCollaborators.map((col) => (
+                      <TableRow key={col.name}>
+                        <TableCell className="font-medium">
+                          {col.name}
+                        </TableCell>
+                        {week.map((day) => (
+                          <TableCell key={day.toISOString() + col.name}>
+                            <Button
+                              variant="outline"
+                              className="w-full cursor-pointer"
+                            >
+                              {
+                                shifts[
+                                  Math.floor(Math.random() * shifts.length)
+                                ]
+                              }
+                            </Button>
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+
+                {hasMore && (
+                  <div className="pt-2 text-center">
+                    <Button
+                      onClick={() => handleLoadMore(weekIdx)}
+                      variant="outline"
+                      className="cursor-pointer w-full"
+                    >
+                      Ver mais
+                    </Button>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          );
+        })}
+      </div>
     </div>
   );
 }

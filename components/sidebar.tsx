@@ -6,7 +6,7 @@ export default function Sidebar() {
   return (
     <>
       {/* Sidebar Desktop */}
-      <aside className="hidden lg:w-64 bg-sidebar text-sidebar-foreground h-screen p-2 lg:p-4 lg:flex flex-col border-r border-border">
+      <aside className="hidden lg:w-64 bg-sidebar text-sidebar-foreground min-h-screen p-2 lg:p-4 lg:flex flex-col border-r border-border">
         <div className="flex flex-col lg:m-0">
           <h2 className="text-xl font-bold mt-4 hidden lg:block">
             Painel do Colaborador
@@ -21,7 +21,7 @@ export default function Sidebar() {
         </div>
         <button
           aria-label="Sair"
-          className="cursor-pointer mt-auto flex items-center justify-center gap-2 rounded-lg hover:text-sidebar-primary hover:bg-secondary p-2 duration-300"
+          className="cursor-pointer flex items-center gap-2 rounded-lg hover:text-sidebar-primary hover:bg-secondary p-2 duration-300"
         >
           <LogOut size={18} />
           <span className="hidden lg:inline ml-2">Sair</span>

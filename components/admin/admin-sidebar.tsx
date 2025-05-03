@@ -5,17 +5,17 @@ import NavLink from "../navLink";
 export const AdminSidebar = () => (
   <>
     {/* Sidebar Desktop */}
-    <aside className="hidden lg:w-64 bg-sidebar text-sidebar-foreground h-screen p-2 lg:p-4 lg:flex flex-col border-r border-border">
+    <aside className="hidden lg:w-64 bg-sidebar text-sidebar-foreground min-h-screen p-2 lg:p-4 lg:flex flex-col border-r border-border">
       <div className="flex flex-col lg:m-0">
         <h2 className="text-xl font-bold mt-4 hidden lg:block">
           Painel do Master
         </h2>{" "}
         <Separator className="my-4 w-full hidden lg:block" />
         <nav className="flex flex-col gap-2 w-full">
-          <NavLink href="/visao-geral">
+          {/* <NavLink href="/visao-geral">
             <LayoutDashboard size={18} />
             <span className="hidden lg:inline ml-2">Visão Geral</span>{" "}
-          </NavLink>
+          </NavLink> */}
           <NavLink href="/equipes">
             <Users size={18} />{" "}
             <span className="hidden lg:inline ml-2">Equipes</span>{" "}
@@ -24,6 +24,10 @@ export const AdminSidebar = () => (
             <CalendarCheck size={18} />{" "}
             <span className="hidden lg:inline ml-2">Editar Escalas</span>{" "}
           </NavLink>
+          {/* <NavLink href="/editar-escalas-2">
+            <CalendarCheck size={18} />{" "}
+            <span className="hidden lg:inline ml-2">Editar Escalas 2</span>{" "}
+          </NavLink> */}
           {/* <NavLink href="/observacoes">
               <FileText size={18} /> Observações
             </NavLink> */}
@@ -31,7 +35,7 @@ export const AdminSidebar = () => (
       </div>
       <button
         aria-label="Sair"
-        className="cursor-pointer mt-auto flex items-center justify-center gap-2 rounded-lg hover:text-sidebar-primary hover:bg-secondary p-2 duration-300"
+        className="cursor-pointer flex items-center gap-2 rounded-lg hover:text-sidebar-primary hover:bg-secondary p-2 duration-300"
       >
         <LogOut size={18} />
         <span className="hidden lg:inline ml-2">Sair</span>{" "}
