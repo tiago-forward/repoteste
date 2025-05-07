@@ -5,6 +5,8 @@ export const collaborators = [
     team: "Suporte",
     shift: "14:00 - 22:00",
     dayOff: "Terça",
+    email: "tiago.ferreira@example.com",
+    password: "Tiago123!",
   },
   {
     name: "Luiz Felipe Azevedo de Brito",
@@ -12,6 +14,8 @@ export const collaborators = [
     team: "Suporte",
     shift: "14:00 - 22:00",
     dayOff: "Quinta",
+    email: "luiz.brito@example.com",
+    password: "Luiz123!",
   },
   {
     name: "Heitor",
@@ -19,6 +23,8 @@ export const collaborators = [
     team: "Suporte",
     shift: "22:00 - 06:00",
     dayOff: "Quarta",
+    email: "heitor@example.com",
+    password: "Heitor123!",
   },
   {
     name: "Kevyn",
@@ -26,6 +32,8 @@ export const collaborators = [
     team: "Suporte",
     shift: "22:00 - 06:00",
     dayOff: "Segunda",
+    email: "kevyn@example.com",
+    password: "Kevyn123!",
   },
   {
     name: "David",
@@ -33,6 +41,8 @@ export const collaborators = [
     team: "Suporte",
     shift: "06:00 - 14:00",
     dayOff: "Segunda",
+    email: "david@example.com",
+    password: "David123!",
   },
   {
     name: "Lavique",
@@ -40,6 +50,8 @@ export const collaborators = [
     team: "Suporte",
     shift: "06:00 - 14:00",
     dayOff: "Sexta",
+    email: "lavique@example.com",
+    password: "Lavique123!",
   },
   {
     name: "Well",
@@ -47,6 +59,8 @@ export const collaborators = [
     team: "Segurança",
     shift: "14:00 - 22:00",
     dayOff: "Sexta",
+    email: "well@example.com",
+    password: "Well123!",
   },
   {
     name: "Well 2",
@@ -54,6 +68,8 @@ export const collaborators = [
     team: "Segurança",
     shift: "14:00 - 22:00",
     dayOff: "Sexta",
+    email: "well2@example.com",
+    password: "Well2123!",
   },
   {
     name: "Well 3",
@@ -61,6 +77,8 @@ export const collaborators = [
     team: "Segurança",
     shift: "14:00 - 22:00",
     dayOff: "Sexta",
+    email: "well3@example.com",
+    password: "Well3123!",
   },
   {
     name: "Well 4",
@@ -68,6 +86,8 @@ export const collaborators = [
     team: "Segurança",
     shift: "14:00 - 22:00",
     dayOff: "Sexta",
+    email: "well4@example.com",
+    password: "Well4123!",
   },
   {
     name: "Well 5",
@@ -75,6 +95,8 @@ export const collaborators = [
     team: "Segurança",
     shift: "14:00 - 22:00",
     dayOff: "Sexta",
+    email: "well5@example.com",
+    password: "Well5123!",
   },
   {
     name: "Well 6",
@@ -82,6 +104,8 @@ export const collaborators = [
     team: "Segurança",
     shift: "14:00 - 22:00",
     dayOff: "Sexta",
+    email: "well6@example.com",
+    password: "Well6123!",
   },
   {
     name: "Well 7",
@@ -89,6 +113,8 @@ export const collaborators = [
     team: "Segurança",
     shift: "14:00 - 22:00",
     dayOff: "Sexta",
+    email: "well7@example.com",
+    password: "Well7123!",
   },
   {
     name: "Demi",
@@ -96,6 +122,8 @@ export const collaborators = [
     team: "Atendimento",
     shift: "14:00 - 22:00",
     dayOff: "Sexta",
+    email: "demi@example.com",
+    password: "Demi123!",
   },
   {
     name: "Demi 2",
@@ -103,6 +131,8 @@ export const collaborators = [
     team: "Atendimento",
     shift: "14:00 - 22:00",
     dayOff: "Sexta",
+    email: "demi2@example.com",
+    password: "Demi2123!",
   },
   {
     name: "Demi 3",
@@ -110,6 +140,8 @@ export const collaborators = [
     team: "Atendimento",
     shift: "14:00 - 22:00",
     dayOff: "Sexta",
+    email: "demi3@example.com",
+    password: "Demi3123!",
   },
   {
     name: "Demi 4",
@@ -117,6 +149,8 @@ export const collaborators = [
     team: "Atendimento",
     shift: "14:00 - 22:00",
     dayOff: "Sexta",
+    email: "demi4@example.com",
+    password: "Demi4123!",
   },
   {
     name: "Demi 5",
@@ -124,6 +158,8 @@ export const collaborators = [
     team: "Atendimento",
     shift: "14:00 - 22:00",
     dayOff: "Sexta",
+    email: "demi5@example.com",
+    password: "Demi5123!",
   },
   {
     name: "Demi 6",
@@ -131,6 +167,8 @@ export const collaborators = [
     team: "Atendimento",
     shift: "14:00 - 22:00",
     dayOff: "Sexta",
+    email: "demi6@example.com",
+    password: "Demi6123!",
   },
   {
     name: "Demi 7",
@@ -138,5 +176,7 @@ export const collaborators = [
     team: "Atendimento",
     shift: "14:00 - 22:00",
     dayOff: "Sexta",
+    email: "demi7@example.com",
+    password: "Demi7123!",
   },
 ];

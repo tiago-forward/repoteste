@@ -26,40 +26,53 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
+import { CollaboratorDialog } from "@/components/Dialogs/CollaboratorDialog";
 
 export default function Equipes() {
   const [selectedTeam, setSelectedTeam] = useState("Todos");
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [selectedCollaborator, setSelectedCollaborator] = useState(null);
 
   const filtered =
     selectedTeam === "Todos"
       ? collaborators
       : collaborators.filter((col) => col.team === selectedTeam);
 
+  const handleEditCollaborator = (collaborator: any) => {
+    setSelectedCollaborator(collaborator);
+    setIsDialogOpen(true);
+  };
+
+  const handleAddCollaborator = () => {
+    setSelectedCollaborator(null);
+    setIsDialogOpen(true);
+  };
+
+  const handleSaveCollaborator = (data: any) => {
+    console.log("Salvar colaborador:", data);
+    setIsDialogOpen(false);
+  };
+
   return (
     <div className="space-y-4">
       <h2 className="text-2xl font-bold">Equipes</h2>
 
-      <div className="flex items-center gap-3">
+      <div className="flex flex-wrap items-center gap-3">
         <span className="text-muted-foreground">Equipe:</span>
-        <Select onValueChange={setSelectedTeam}>
+        <Select onValueChange={setSelectedTeam} defaultValue="Todos">
           <SelectTrigger className="w-[180px] cursor-pointer">
             <SelectValue placeholder="Selecionar equipe" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="Todos" className="cursor-pointer">
-              Todos
-            </SelectItem>
-            <SelectItem value="Suporte" className="cursor-pointer">
-              Suporte
-            </SelectItem>
-            <SelectItem value="Segurança" className="cursor-pointer">
-              Segurança
-            </SelectItem>
-            <SelectItem value="Atendimento" className="cursor-pointer">
-              Atendimento
-            </SelectItem>
+            <SelectItem value="Todos">Todos</SelectItem>
+            <SelectItem value="Suporte">Suporte</SelectItem>
+            <SelectItem value="Segurança">Segurança</SelectItem>
+            <SelectItem value="Atendimento">Atendimento</SelectItem>
           </SelectContent>
         </Select>
+        <Button onClick={handleAddCollaborator} className="cursor-pointer">
+          Adicionar Colaborador
+        </Button>
       </div>
 
       <Card className="py-4 md:py-6">
@@ -67,15 +80,11 @@ export default function Equipes() {
           <Table className="min-w-full">
             <TableHeader>
               <TableRow>
-                <TableHead className="font-bold">Nome</TableHead>
-                <TableHead className="font-bold hidden md:table-cell">
-                  Cargo
-                </TableHead>
-                <TableHead className="font-bold hidden md:table-cell">
-                  Equipe
-                </TableHead>
-                <TableHead className="font-bold">Turno padrão</TableHead>
-                <TableHead className="font-bold truncate max-w-[54px] sm:max-w-28 md:max-w-none">
+                <TableHead>Nome</TableHead>
+                <TableHead className="hidden md:table-cell">Cargo</TableHead>
+                <TableHead className="hidden md:table-cell">Equipe</TableHead>
+                <TableHead>Turno padrão</TableHead>
+                <TableHead className="truncate max-w-[54px] sm:max-w-28 md:max-w-none">
                   Folga fixa
                 </TableHead>
                 <TableHead>Ações</TableHead>
@@ -94,36 +103,44 @@ export default function Equipes() {
                     {col.team}
                   </TableCell>
                   <TableCell>{col.shift}</TableCell>
-                  <TableCell className="truncate max-w-[54px] sm:max-w-28 md:max-w-none">
-                    {col.dayOff}
-                  </TableCell>
-                  <TableCell className="space-x-2">
+                  <TableCell>{col.dayOff}</TableCell>
+                  <TableCell>
                     <div className="hidden lg:flex space-x-2">
-                      <Button size="sm" variant="outline">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleEditCollaborator(col)}
+                        className="cursor-pointer"
+                      >
                         Editar
                       </Button>
-                      <Button size="sm" variant="destructive">
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        className="cursor-pointer"
+                      >
                         Desativar
                       </Button>
                     </div>
-
                     <div className="lg:hidden">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="cursor-pointer"
+                          >
                             <MoreHorizontal className="h-5 w-5" />
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem
-                            onClick={() => console.log("Editar", col.name)}
+                            onClick={() => handleEditCollaborator(col)}
+                            className="cursor-pointer"
                           >
                             Editar
                           </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() => console.log("Desativar", col.name)}
-                            className="text-red-600"
-                          >
+                          <DropdownMenuItem className="text-red-600 cursor-pointer">
                             Desativar
                           </DropdownMenuItem>
                         </DropdownMenuContent>
@@ -136,6 +153,13 @@ export default function Equipes() {
           </Table>
         </CardContent>
       </Card>
+
+      <CollaboratorDialog
+        open={isDialogOpen}
+        onOpenChange={setIsDialogOpen}
+        collaborator={selectedCollaborator}
+        onSave={handleSaveCollaborator}
+      />
     </div>
   );
 }

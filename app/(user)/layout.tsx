@@ -9,7 +9,7 @@ export default function UserLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const isAdmin = false;
+  const isAdmin = true;
 
   return (
     <CalendarProvider>
@@ -27,7 +27,7 @@ export default function UserLayout({
 
       <div className="flex">
         {isAdmin ? <AdminSidebar /> : <Sidebar />}
-        <main className="flex-1 bg-background p-6 min-h-screen">
+        <main className="flex-1 bg-background p-2 md:p-6 min-h-screen">
           {children}
         </main>
       </div>
