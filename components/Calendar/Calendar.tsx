@@ -4,14 +4,11 @@ import { Calendar } from "@/components/Calendar";
 import { getWeekDays } from "@/utils/get-week-days";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useCalendar } from "@/contexts/CalendarContext";
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "../ui/hover-card";
+import { useCalendarDetails } from "@/stores/useCalendarDetails";
 
 export function CalendarBox() {
   const shortWeekDays = getWeekDays({ short: true });
+  const { selectedDate, setSelectedDate } = useCalendarDetails();
 
   const { month, year, handlePreviousMonth, handleNextMonth, calendarWeeks } =
     useCalendar();
@@ -55,52 +52,67 @@ export function CalendarBox() {
                 <tr key={week}>
                   {days.map(({ date, disabled, types }) => {
                     return (
-                      <Calendar.Td key={date.toString()} disabled={disabled}>
-                        <HoverCard>
-                          <HoverCardTrigger>
-                            {" "}
-                            <Calendar.Button
-                              disabled={disabled}
-                              dayType={types[0]?.type}
-                            >
-                              {date.getDate()}
-                            </Calendar.Button>
-                          </HoverCardTrigger>
-                          <HoverCardContent
-                            align="start"
-                            sideOffset={26}
-                            className="w-full px-2 py-2 pr-6 bg-accent"
-                          >
+                      <Calendar.Td
+                        key={date.toString()}
+                        disabled={disabled}
+                        selected={
+                          selectedDate?.toDateString() === date.toDateString()
+                        }
+                        onClick={() => {
+                          if (disabled) return;
+
+                          if (
+                            selectedDate?.toDateString() === date.toDateString()
+                          ) {
+                            setSelectedDate(null); // desmarca seleção
+                          } else {
+                            setSelectedDate(date); // marca nova seleção
+                          }
+                        }}
+                      >
+                        <Calendar.Button
+                          disabled={disabled}
+                          dayType={types[0]?.type}
+                        >
+                          {date.getDate()}
+                        </Calendar.Button>
+                        {/* 
+                        {selectedDate?.toDateString() ===
+                          date.toDateString() && (
+                          <div className="w-38 px-2 py-2 pr-6 bg-accent absolute top-full left-0 z-50 rounded">
                             {types.map((typeInfo, index) => {
                               const { type } = typeInfo;
 
                               return (
-                                <div key={index} className="flex gap-2">
+                                <div
+                                  key={index}
+                                  className="flex gap-2 items-center"
+                                >
                                   {type === "observação" && (
-                                    <div className="flex items-center gap-2">
+                                    <>
                                       <div className="w-2.5 h-2.5 rounded-full bg-obs-3"></div>
                                       <p>Observação</p>
-                                    </div>
+                                    </>
                                   )}
                                   {type === "folga" && (
-                                    <div className="flex items-center gap-2">
+                                    <>
                                       <div className="w-2.5 h-2.5 rounded-full bg-obs-2"></div>
-                                      <p>Folta</p>
-                                    </div>
+                                      <p>Folga</p>
+                                    </>
                                   )}
                                   {type === "trocado" && (
-                                    <div className="flex items-center gap-2">
+                                    <>
                                       <div className="w-2.5 h-2.5 rounded-full bg-obs-1"></div>
-                                      <p className="flex gap-2 items-center">
-                                        Dia trocado
-                                      </p>
-                                    </div>
+                                      <p>Dia trocado</p>
+                                    </>
                                   )}
                                 </div>
                               );
                             })}
-                          </HoverCardContent>
-                        </HoverCard>
+                          </div>
+                        )} */}
+
+                        {/* Pontinhos coloridos */}
                         {types.map((typeInfo, index) => {
                           const { type } = typeInfo;
 
