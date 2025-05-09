@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -27,18 +27,23 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
 import { CollaboratorDialog } from "@/components/Dialogs/CollaboratorDialog";
+import { UserProps } from "@/types/user";
+import { DeleteConfirmationDialog } from "@/components/Dialogs/DeleteConfirmationDialog";
 
 export default function Equipes() {
   const [selectedTeam, setSelectedTeam] = useState("Todos");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [selectedCollaborator, setSelectedCollaborator] = useState(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [selectedCollaborator, setSelectedCollaborator] =
+    useState<UserProps | null>(null);
 
-  const filtered =
-    selectedTeam === "Todos"
+  const filtered = useMemo(() => {
+    return selectedTeam === "Todos"
       ? collaborators
       : collaborators.filter((col) => col.team === selectedTeam);
+  }, [selectedTeam]);
 
-  const handleEditCollaborator = (collaborator: any) => {
+  const handleEditCollaborator = (collaborator: UserProps) => {
     setSelectedCollaborator(collaborator);
     setIsDialogOpen(true);
   };
@@ -48,9 +53,22 @@ export default function Equipes() {
     setIsDialogOpen(true);
   };
 
-  const handleSaveCollaborator = (data: any) => {
+  const handleSaveCollaborator = (data: UserProps) => {
     console.log("Salvar colaborador:", data);
     setIsDialogOpen(false);
+  };
+
+  const handleDeleteCollaborator = (collaborator: UserProps) => {
+    console.log("Excluir colaborador:", collaborator.name);
+    setSelectedCollaborator(collaborator);
+    setDeleteDialogOpen(true);
+  };
+
+  const confirmDelete = () => {
+    if (selectedCollaborator) {
+      // lógica de exclusão aqui, por exemplo:
+      // deleteCollaboratorById(selectedCollaborator.email); // ou ID
+    }
   };
 
   return (
@@ -92,7 +110,7 @@ export default function Equipes() {
             </TableHeader>
             <TableBody>
               {filtered.map((col, i) => (
-                <TableRow key={i}>
+                <TableRow key={col.name}>
                   <TableCell className="truncate max-w-[85px] sm:max-w-28 md:max-w-none">
                     {col.name}
                   </TableCell>
@@ -118,8 +136,9 @@ export default function Equipes() {
                         size="sm"
                         variant="destructive"
                         className="cursor-pointer"
+                        onClick={() => handleDeleteCollaborator(col)}
                       >
-                        Desativar
+                        Excluir
                       </Button>
                     </div>
                     <div className="lg:hidden">
@@ -140,8 +159,11 @@ export default function Equipes() {
                           >
                             Editar
                           </DropdownMenuItem>
-                          <DropdownMenuItem className="text-red-600 cursor-pointer">
-                            Desativar
+                          <DropdownMenuItem
+                            className="text-red-600 cursor-pointer"
+                            onClick={() => handleDeleteCollaborator(col)}
+                          >
+                            Excluir
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
@@ -159,6 +181,13 @@ export default function Equipes() {
         onOpenChange={setIsDialogOpen}
         collaborator={selectedCollaborator}
         onSave={handleSaveCollaborator}
+      />
+
+      <DeleteConfirmationDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        collaboratorName={selectedCollaborator?.name || ""}
+        onConfirm={confirmDelete}
       />
     </div>
   );

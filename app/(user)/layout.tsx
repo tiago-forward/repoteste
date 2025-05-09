@@ -1,4 +1,4 @@
-import { AdminSidebar } from "@/components/admin/admin-sidebar";
+import AdminSidebar from "@/components/admin/admin-sidebar";
 import Sidebar from "@/components/sidebar";
 import { CalendarProvider } from "@/contexts/CalendarContext";
 import logo from "@/public/logo-main.png";

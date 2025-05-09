@@ -1,13 +1,36 @@
+"use client";
+
 import { Calendar, LogOut } from "lucide-react";
 import { Separator } from "./ui/separator";
 import NavLink from "./navLink";
+import { redirect } from "next/navigation";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 export default function Sidebar() {
+  const handleButtonLogout = () => {
+    redirect("/login");
+  };
+
   return (
     <>
       {/* Sidebar Desktop */}
       <aside className="hidden lg:w-64 bg-sidebar text-sidebar-foreground min-h-screen p-2 lg:p-4 lg:flex flex-col border-r border-border">
         <div className="flex flex-col lg:m-0">
+          <div className="flex items-center gap-1 md:gap-2">
+            <Avatar>
+              <AvatarImage src="" />
+              <AvatarFallback>TF</AvatarFallback>
+            </Avatar>
+            <div className="flex flex-col">
+              <span className="truncate font-semibold">
+                Tiago Lacerda Ferreira
+              </span>
+              <span className="truncate text-xs">
+                tiagolacerdatrabson@gmail.com
+              </span>
+            </div>
+          </div>
+          <Separator className="my-4 w-full hidden lg:block" />
           <h2 className="text-xl font-bold mt-4 hidden lg:block">
             Painel do Colaborador
           </h2>
@@ -22,6 +45,7 @@ export default function Sidebar() {
         <button
           aria-label="Sair"
           className="cursor-pointer flex items-center gap-2 rounded-lg hover:text-sidebar-primary hover:bg-secondary p-2 duration-300"
+          onClick={handleButtonLogout}
         >
           <LogOut size={18} />
           <span className="hidden lg:inline ml-2">Sair</span>

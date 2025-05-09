@@ -15,3 +15,7 @@ export function getWeekDays({ short = false }: GetWeekDaysParams = {}) {
       return weekDay.substring(0, 1).toUpperCase().concat(weekDay.substring(1));
     });
 }
+
+// Essa função gera uma lista com os nomes dos dias da semana em português brasileiro (pt-BR).
+// Ela pode retornar os nomes completos (segunda-feira, terça-feira, etc.) ou abreviados
+// (SEG, TER, etc.), dependendo do valor do parâmetro short.

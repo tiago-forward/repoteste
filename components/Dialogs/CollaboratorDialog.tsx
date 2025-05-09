@@ -7,7 +7,6 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,6 +19,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { shifts } from "@/constants/shifts";
+import { UserProps } from "@/types/user";
 
 const weekDays = [
   "Domingo",
@@ -34,8 +34,8 @@ const weekDays = [
 interface CollaboratorDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  collaborator: any;
-  onSave: (data: any) => void;
+  collaborator: UserProps | null;
+  onSave: (data: UserProps) => void;
 }
 
 export function CollaboratorDialog({
@@ -44,13 +44,23 @@ export function CollaboratorDialog({
   collaborator,
   onSave,
 }: CollaboratorDialogProps) {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [position, setPosition] = useState("Front");
-  const [team, setTeam] = useState("Suporte");
-  const [selectedShifts, setSelectedShifts] = useState<string[]>([]);
-  const [dayOff, setDayOff] = useState("Domingo");
+  const [name, setName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [position, setPosition] = useState<string>("Front");
+  const [team, setTeam] = useState<string>("Suporte");
+  const [dayOff, setDayOff] = useState<string>("Domingo");
+  const [selectedShifts, setSelectedShift] = useState<string>("");
+
+  const initialState: UserProps = {
+    name: "",
+    email: "",
+    password: "",
+    position: "Front",
+    team: "Suporte",
+    shift: "",
+    dayOff: "Domingo",
+  };
 
   useEffect(() => {
     if (collaborator) {
@@ -59,27 +69,46 @@ export function CollaboratorDialog({
       setPassword(collaborator.password || "");
       setPosition(collaborator.position || "");
       setTeam(collaborator.team || "");
-      setSelectedShifts(collaborator.shifts || []);
+      setSelectedShift(collaborator.shift || "");
       setDayOff(collaborator.dayOff || "");
     } else {
-      setName("");
-      setEmail("");
-      setPassword("");
-      setPosition("");
-      setTeam("");
-      setSelectedShifts([]);
-      setDayOff("");
+      setName(initialState.name);
+      setEmail(initialState.email);
+      setPassword(initialState.password);
+      setPosition(initialState.position);
+      setTeam(initialState.team);
+      setSelectedShift(initialState.shift);
+      setDayOff(initialState.dayOff);
     }
   }, [collaborator]);
 
   const handleToggleShift = (shift: string) => {
-    setSelectedShifts((prev) =>
-      prev.includes(shift) ? prev.filter((s) => s !== shift) : [...prev, shift]
-    );
+    setSelectedShift((prev) => (prev === shift ? "" : shift));
   };
 
   const handleSubmit = () => {
-    onSave({ name, email, password, team, shifts: selectedShifts, dayOff });
+    if (
+      !name ||
+      !email ||
+      !password ||
+      !position ||
+      !team ||
+      !selectedShifts ||
+      !dayOff
+    ) {
+      alert("Preencha todos os campos obrigatórios.");
+      return;
+    }
+
+    onSave({
+      name,
+      email,
+      password,
+      position,
+      team,
+      shift: selectedShifts,
+      dayOff,
+    });
   };
 
   return (

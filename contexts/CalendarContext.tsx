@@ -4,16 +4,16 @@ import { createContext, useContext, useMemo, useState, ReactNode } from "react";
 import {
   addDays,
   addMonths,
-  endOfDay,
   endOfMonth,
+  format,
   getDaysInMonth,
   startOfMonth,
   subDays,
   subMonths,
-  format,
 } from "date-fns";
-import { calendarData, DayEntry } from "@/constants/calendar-data";
 import { ptBR } from "date-fns/locale";
+
+import { calendarData, DayEntry } from "@/constants/calendar-data";
 
 interface DayInfo {
   date: Date;
@@ -43,36 +43,37 @@ export function CalendarProvider({ children }: { children: ReactNode }) {
   );
 
   const month = format(currentDate, "MMMM", { locale: ptBR });
-  const year = format(currentDate, "yyyy", { locale: ptBR });
+  const year = format(currentDate, "yyyy");
 
   function handlePreviousMonth() {
-    setCurrentDate(subMonths(currentDate, 1));
+    setCurrentDate((prev) => subMonths(prev, 1));
   }
 
   function handleNextMonth() {
-    setCurrentDate(addMonths(currentDate, 1));
+    setCurrentDate((prev) => addMonths(prev, 1));
   }
 
   const calendarWeeks = useMemo(() => {
-    const daysInMonthArray = Array.from({
-      length: getDaysInMonth(currentDate),
-    }).map((_, i) => addDays(startOfMonth(currentDate), i));
+    const firstDayOfMonth = startOfMonth(currentDate);
+    const lastDayOfMonth = endOfMonth(currentDate);
+    const totalDays = getDaysInMonth(currentDate);
 
-    const firstWeekDay = currentDate.getDay();
-    const previousMonthFillArray = Array.from({ length: firstWeekDay }).map(
-      (_, i) => subDays(startOfMonth(currentDate), i + 1)
+    const daysInMonth = Array.from({ length: totalDays }, (_, i) =>
+      addDays(firstDayOfMonth, i)
     );
 
-    const lastWeekDay = endOfDay(currentDate).getDay();
-    const nextMonthFillArray = Array.from({ length: 6 - lastWeekDay }).map(
-      (_, i) => addDays(endOfMonth(currentDate), i + 1)
+    const startPadding = firstDayOfMonth.getDay();
+    const endPadding = 6 - lastDayOfMonth.getDay();
+
+    const daysBefore = Array.from({ length: startPadding }, (_, i) =>
+      subDays(firstDayOfMonth, startPadding - i)
     );
 
-    const allDays = [
-      ...previousMonthFillArray.reverse(),
-      ...daysInMonthArray,
-      ...nextMonthFillArray,
-    ];
+    const daysAfter = Array.from({ length: endPadding }, (_, i) =>
+      addDays(lastDayOfMonth, i + 1)
+    );
+
+    const allDays = [...daysBefore, ...daysInMonth, ...daysAfter];
 
     const calendarDays = allDays.map((date) => {
       const monthKey = format(currentDate, "yyyy-MM");
@@ -82,19 +83,18 @@ export function CalendarProvider({ children }: { children: ReactNode }) {
       return {
         date,
         disabled: date.getMonth() !== currentDate.getMonth(),
-        types: dayInfo?.types || [],
+        types: dayInfo?.types ?? [],
       };
     });
 
-    const weeks = calendarDays.reduce<CalendarWeek[]>((acc, _, i, original) => {
-      if (i % 7 === 0) {
-        acc.push({
-          week: Math.floor(i / 7) + 1,
-          days: original.slice(i, i + 7),
-        });
-      }
-      return acc;
-    }, []);
+    const weeks: CalendarWeek[] = [];
+
+    for (let i = 0; i < calendarDays.length; i += 7) {
+      weeks.push({
+        week: weeks.length + 1,
+        days: calendarDays.slice(i, i + 7),
+      });
+    }
 
     return weeks;
   }, [currentDate]);

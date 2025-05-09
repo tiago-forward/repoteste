@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -19,26 +19,30 @@ import {
 } from "@/components/ui/table";
 import { Card, CardContent } from "@/components/ui/card";
 import { collaborators } from "@/constants/collaborators";
-import { shifts } from "@/constants/shifts";
 import { months } from "@/constants/months";
+import { ShiftsDialog } from "@/components/Dialogs/ShiftsDialog";
+import { UserProps } from "@/types/user";
+import { teams } from "@/constants/teams";
+import { weekDays } from "@/constants/week-days";
 
 // Função utilitária para dividir mês em semanas
 const getWeeks = (year: number, month: number): Date[][] => {
-  const date = new Date(year, month - 1, 1);
+  const current = new Date(year, month - 1, 1);
   const weeks: Date[][] = [];
   let week: Date[] = [];
 
-  while (date.getMonth() === month - 1) {
-    week.push(new Date(date));
-    if (
-      date.getDay() === 6 ||
-      date.getDate() ===
-        new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate()
-    ) {
+  while (current.getMonth() === month - 1) {
+    week.push(new Date(current));
+    const isEndOfWeek = current.getDay() === 6;
+    const isLastDayOfMonth =
+      current.getDate() === new Date(year, month, 0).getDate();
+
+    if (isEndOfWeek || isLastDayOfMonth) {
       weeks.push(week);
       week = [];
     }
-    date.setDate(date.getDate() + 1);
+
+    current.setDate(current.getDate() + 1);
   }
 
   return weeks;
@@ -49,12 +53,18 @@ export default function EditarEscalas() {
   const [selectedMonth, setSelectedMonth] = useState(today.getMonth() + 1);
   const [selectedYear] = useState(today.getFullYear());
   const [selectedTeam, setSelectedTeam] = useState("Todos");
-
   const [visibleByWeek, setVisibleByWeek] = useState<Record<number, number>>(
     {}
   );
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [selectedCollaborator, setSelectedCollaborator] =
+    useState<UserProps | null>(null);
+  const [selectedDays, setSelectedDays] = useState<Date[]>([]);
 
-  const weeks = getWeeks(selectedYear, selectedMonth);
+  const weeks = useMemo(
+    () => getWeeks(selectedYear, selectedMonth),
+    [selectedMonth, selectedYear]
+  );
 
   const filtered = collaborators.filter((col) => {
     if (selectedTeam !== "Todos" && col.team !== selectedTeam) return false;
@@ -99,7 +109,7 @@ export default function EditarEscalas() {
             defaultValue={String(selectedMonth)}
           >
             <SelectTrigger className="w-[140px]">
-              <SelectValue />
+              <SelectValue placeholder="Selecione um mês" />
             </SelectTrigger>
             <SelectContent>
               {months.map((month, idx) => (
@@ -115,13 +125,14 @@ export default function EditarEscalas() {
           <span className="text-muted-foreground">Equipe:</span>
           <Select onValueChange={handleChangeTeam} defaultValue="Todos">
             <SelectTrigger className="w-[150px]">
-              <SelectValue />
+              <SelectValue placeholder="Selecione uma equipe" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="Todos">Todas</SelectItem>
-              <SelectItem value="Suporte">Suporte</SelectItem>
-              <SelectItem value="Atendimento">Atendimento</SelectItem>
-              <SelectItem value="Segurança">Segurança</SelectItem>
+              {teams.map((team) => (
+                <SelectItem key={team} value={team}>
+                  {team}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
@@ -178,12 +189,15 @@ export default function EditarEscalas() {
                             <Button
                               variant="outline"
                               className="w-full cursor-pointer"
+                              onClick={() => {
+                                setSelectedCollaborator(col);
+                                setSelectedDays(week);
+                                setIsDialogOpen(true);
+                              }}
                             >
-                              {
-                                shifts[
-                                  Math.floor(Math.random() * shifts.length)
-                                ]
-                              }
+                              {weekDays[day.getDay()] === col.dayOff
+                                ? "Folga"
+                                : col.shift}
                             </Button>
                           </TableCell>
                         ))}
@@ -208,6 +222,18 @@ export default function EditarEscalas() {
           );
         })}
       </div>
+
+      {selectedCollaborator && (
+        <ShiftsDialog
+          open={isDialogOpen}
+          onOpenChange={setIsDialogOpen}
+          collaborator={selectedCollaborator}
+          days={selectedDays}
+          onSave={(col, updatedShifts) => {
+            console.log("Salvar turnos para:", col.name, updatedShifts);
+          }}
+        />
+      )}
     </div>
   );
 }
